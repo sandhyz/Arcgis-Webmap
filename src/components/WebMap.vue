@@ -1,5 +1,9 @@
 <template>
   <div class="map-view">
+    <label>lat</label>
+    <input v-model="datax"/>
+    <label>lon</label>
+    <input v-model="datay"/>
   </div>
 
 </template>
@@ -14,9 +18,14 @@ import Legend from '@arcgis/core/widgets/Legend'
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer'
 // import Sketch from '@arcgis/core/widgets/Sketch'
 import GeoJSONLayer from '@arcgis/core/layers/GeoJSONLayer'
+// import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol'
 // import rendererJsonUtils from '@arcgis/core/renderers/support/jsonUtils'
 // import Popup from "@arcgis/core/widgets/Popup";
-import PopupTemplate from "@arcgis/core/PopupTemplate";
+// import PopupTemplate from "@arcgis/core/PopupTemplate"
+import ClassBreaksRenderer from '@arcgis/core/renderers/ClassBreaksRenderer'
+
+//json
+import datas from "@/assets/3273-kota-bandung-level-kewilayahan.json"
 
 export default {
   name: 'WebMap',
@@ -33,69 +42,185 @@ export default {
   ,
 
   mounted() {
-    let template = new PopupTemplate({
-      title: "Population by Gender",
-    });
+
+    //warna warni
+
+
+    // let template = new PopupTemplate({
+    //   title: "Population by Gender",
+    // });
     //contoh data
-    const geojsonlayer = new GeoJSONLayer({
-      url: "https://raw.githubusercontent.com/tryfatur/geojson-bandung/master/3273-kota-bandung-level-kelurahan.json",
-      copyright: "USGS Earthquakes",
-      PopupTemplate: template
-    });
+    // const geojsonlayer = new GeoJSONLayer({
+    //   url: "https://raw.githubusercontent.com/tryfatur/geojson-bandung/master/3273-kota-bandung-level-kewilayahan.json",
+    //   copyright: "USGS Earthquakes",
+    //   PopupTemplate: template
+    // });
 
-    const datajson = {
+    // const geojson = datas
+
+    //     const datajson = {
 
 
-      "type": "FeatureCollection",
-      "features": [
+    // "type": "FeatureCollection",
+    // "features": [
+    //   {
+    //     "type": "Feature",
+    //     "properties": {},
+    //     "geometry": {
+    //       "type": "Point",
+    //       "coordinates": [
+    //         107.67288208007812,
+    //         -6.965278395972943
+    //       ]
+    //     }
+    //   },
+    //   {
+    //     "type": "Feature",
+    //     "properties": {},
+    //     "geometry": {
+    //       "type": "Point",
+    //       "coordinates": [
+    //         107.6443862915039,
+    //         -7.025594153831843
+    //       ]
+    //     }
+    //   },
+    //   {
+    //     "type": "Feature",
+    //     "properties": {},
+    //     "geometry": {
+    //       "type": "Point",
+    //       "coordinates": [
+    //         107.69004821777344,
+    //         -7.0126456653825455
+    //       ]
+    //     }
+    //   },
+    //   {
+    //     "type": "Feature",
+    //     "properties": {},
+    //     "geometry": {
+    //       "type": "Point",
+    //       "coordinates": [
+    //         107.56301879882812,
+    //         -7.034112699606202
+    //       ]
+    //     }
+    //   }
+    // ]
+
+
+    // };
+
+    // const blob = new Blob([JSON.stringify(datajson)], {
+    // type: "application/json"
+    // });
+
+    // // URL reference to the blob
+    // const url = URL.createObjectURL(blob);
+    // // create new geojson layer using the blob url
+    // const geojsonlayer2 = new GeoJSONLayer({
+    // url
+    // });
+
+    const datajson = datas;
+    // console.log(datas.features[0].properties.nama_wilayah)
+    // function createSymbol(color) {
+    //       return {
+    //         type: "simple-fill",
+    //         color: color,
+    //         outline: {
+    //           width: 0.3,
+    //           color: [255, 255, 255, 0.2]
+    //         }
+    //       };
+    //     }
+
+    const less35 = {
+      type: "simple-fill", // autocasts as new SimpleFillSymbol()
+      color: "#00b6f1",
+      style: "solid",
+      outline: {
+        width: 0.2,
+        color: [255, 255, 255, 0.5]
+      }
+    };
+
+    const less50 = {
+      type: "simple-fill", // autocasts as new SimpleFillSymbol()
+      color: "#d9bf0d",
+      style: "solid",
+      outline: {
+        width: 0.2,
+        color: [255, 255, 255, 0.5]
+      }
+    };
+
+    const more50 = {
+      type: "simple-fill", // autocasts as new SimpleFillSymbol()
+      color: "#6a28c7",
+      style: "solid",
+      outline: {
+        width: 0.2,
+        color: [255, 255, 255, 0.5]
+      }
+    };
+
+    const more75 = {
+      type: "simple-fill", // autocasts as new SimpleFillSymbol()
+      color: "#c44245",
+      style: "solid",
+      outline: {
+        width: 0.2,
+        color: [255, 255, 255, 0.5]
+      }
+    };
+
+    // const colors = [ "#00b6f1", "#d9bf0d", "#6a28c7", "#c44245", "#b9a087", "#ab579d", "#78aea0", "#1e8553" ];
+    const renderer = new ClassBreaksRenderer({
+      field: "data",
+      normalizationField: "",
+
+      legendOptions: {
+        title: "nama_wilayah"
+      },
+      defaultSymbol: {
+        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        color: "black",
+        style: "backward-diagonal",
+        outline: {
+          width: 1,
+          color: [50, 50, 50, 0.6]
+        }
+      },
+      defaultLabel: "no data",
+      classBreakInfos: [
         {
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              107.67288208007812,
-              -6.965278395972943
-            ]
-          }
+          minValue: 0,
+          maxValue: 1,
+          symbol: less35,
+          label: "data <= 1" // label for symbol in legend
         },
         {
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              107.6443862915039,
-              -7.025594153831843
-            ]
-          }
+          minValue: 2,
+          maxValue: 3,
+          symbol: less50,
+          label: "data <= 3" // label for symbol in legend
         },
         {
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              107.69004821777344,
-              -7.0126456653825455
-            ]
-          }
+          minValue: 4,
+          maxValue: 6,
+          symbol: more50,
+          label: "data <= 6" // label for symbol in legend
         },
         {
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              107.56301879882812,
-              -7.034112699606202
-            ]
-          }
+          minValue: 7,
+          maxValue: 100,
+          symbol: more75,
+          label: "data => 7" // label for symbol in legend
         }
       ]
-
-
-    };
+    })
 
     const blob = new Blob([JSON.stringify(datajson)], {
       type: "application/json"
@@ -105,8 +230,19 @@ export default {
     const url = URL.createObjectURL(blob);
     // create new geojson layer using the blob url
     const geojsonlayer2 = new GeoJSONLayer({
-      url
+      url,
+      outFields: ["nama_wilayah", "id_wilayah", "data"
+      ],
+      renderer: renderer,
+      opacity: 0.85,
+      popupTemplate: { // autocast as esri/PopupTemplate
+        title: "Nama Wilayah {nama_wilayah}  ",
+        content: "data yang telah diverifikasi {data}"
+      },
+
     });
+    console.log(geojsonlayer2)
+
 
     // Set the renderer on a layer
 
@@ -130,8 +266,10 @@ export default {
 
     });
 
-    map.add(geojsonlayer);  // adds the layer to the map
+    // map.add(geojsonlayer);  // adds the layer to the map
     map.add(geojsonlayer2);
+    // map.add(geojsonlayer3);
+
 
     const view = new MapView({
       map,
@@ -167,7 +305,7 @@ export default {
 
 
 
-      const featureLayer = geojsonlayer;
+      const featureLayer = geojsonlayer2;
 
 
       const legend = new Legend({
@@ -185,14 +323,22 @@ export default {
 
 
 
-      view.on("click", () => {
+
+
+      view.on("click", (event) => {
+
+        let data = view.hitTest(event);
+        console.log(data)
+
+        // for(let {layer} of results){
+        // }
+
+          // var pixel = view.getE
         // let nama_kecamatan, parkName;
 
-        // const getjson = view.getFeaturesAtPixel(event.pixel, {
-        //   layerFilter: (layer) => layer === geojsonlayer
-        // });
+        // const getjson = view.getEventPixel(event.originalEvent);
 
-        console.log(geojsonlayer)
+        // console.log(getjson)
 
         // view.popup.open({
         //   title: "tes",
@@ -212,20 +358,38 @@ export default {
       });
 
 
-      view.popup.autoOpenEnabled = false;
+      // view.popup.autoOpenEnabled = false;
       view.on("click", (event) => {
         // Get the coordinates of the click on the view
         // around the decimals to 3 decimals
         let lat = Math.round(event.mapPoint.latitude * 1000) / 1000;
         let lon = Math.round(event.mapPoint.longitude * 1000) / 1000;
 
-        console.log([lat, lon])
+        this.datax = lat
+        this.datay = lon
 
-        view.popup.open({
-          // Set the popup's title to the coordinates of the clicked location
-          title: "Reverse geocode: [" + lon + ", " + lat + "]",
-          location: event.mapPoint // Set the location of the popup to the clicked location
-        });
+        console.log([event.mapPoint.latitude, event.mapPoint.longitude])
+
+        //         let symbol = {
+        //   type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+        //   style: "square",
+        //   color: "blue",
+        //   size: "8px",  // pixels
+        //   outline: {  // autocasts as new SimpleLineSymbol()
+        //     color: [ 255, 255, 0 ],
+        //     width: 3  // points
+        //   }
+        // };
+        // var marker = new SimpleMarkerSymbol();
+        // marker.setSize(12)
+        // var marker = { type: "simple-marker" };
+
+
+        // view.popup.open({
+        //   // Set the popup's title to the coordinates of the clicked location
+        //   title: "Reverse geocode: [" + lon + ", " + lat + "]",
+        //   location: event.mapPoint // Set the location of the popup to the clicked location
+        // });
 
 
       });
