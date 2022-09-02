@@ -19,6 +19,7 @@ import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer'
 // import Sketch from '@arcgis/core/widgets/Sketch'
 import GeoJSONLayer from '@arcgis/core/layers/GeoJSONLayer'
 // import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol'
+import SimpleFillSymbol from '@arcgis/core/symbols/SimpleFillSymbol'
 // import rendererJsonUtils from '@arcgis/core/renderers/support/jsonUtils'
 // import Popup from "@arcgis/core/widgets/Popup";
 // import PopupTemplate from "@arcgis/core/PopupTemplate"
@@ -369,6 +370,13 @@ export default {
         this.datay = lon
 
         console.log([event.mapPoint.latitude, event.mapPoint.longitude])
+
+        new SimpleFillSymbol({
+          layer: graphicsLayer,
+          view: view,
+        }
+          
+        );
 
         //         let symbol = {
         //   type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
